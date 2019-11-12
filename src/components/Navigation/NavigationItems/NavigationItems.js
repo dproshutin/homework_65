@@ -17,6 +17,9 @@ const NavigationItems = () => {
             <NavigationItem to="/pages/contacts" exact>
                 Contacts
             </NavigationItem>
+            <NavigationItem to="/pages/admin" exact>
+                Admin
+            </NavigationItem>
         </ul>
     );
 };
