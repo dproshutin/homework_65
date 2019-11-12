@@ -1,25 +1,28 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import Layout from "./components/Layout/Layout";
+import PageLoader from "./containers/PageLoader/PageLoader";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+          <Layout>
+              <Switch>
+                  <Route path="/pages/:page" exact render={props => {
+                    return <PageLoader {...props} />
+                  }}/>
+                  <Route render={() => {
+                      return (
+                          <div style={{textAlign: "center"}}>
+                              <h1>404 <br/> Page Not Found!</h1>
+                          </div>
+                      );
+                  }}/>
+              </Switch>
+          </Layout>
+      </BrowserRouter>
   );
 }
 
