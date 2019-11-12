@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from '../../axios-homework-65';
+import Spinner from "../../components/UI/Spinner/Spinner";
 
 class PageLoader extends Component {
     state = {
@@ -18,7 +19,8 @@ class PageLoader extends Component {
         this._getContent();
     }
     _getContent = () => {
-        axios.get("/" + this.props.match.params.page + ".json")
+        const path = this.props.match.params.page || "home";
+        axios.get("/" + path + ".json")
             .then(response => {
                 const data = response.data;
                 this.setState({loading: false, data});
@@ -28,6 +30,9 @@ class PageLoader extends Component {
         })
     };
     render() {
+        if (this.state.loading) {
+            return <Spinner/>
+        }
         return (
             <div>
                 <h3>{this.state.data.title}</h3>
