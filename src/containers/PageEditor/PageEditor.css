@@ -1,0 +1,25 @@
+.PageEditor {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+.SelectBox {
+    display: block;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+.SelectBox label {
+    display: block;
+    margin-bottom: 20px;
+}
+.PageEditorForm {
+    width: 50%;
+    padding: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+.PageEditorForm textarea {
+    resize: none;
+}

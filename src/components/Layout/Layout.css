@@ -1,3 +1,8 @@
 .Layout-content {
     margin-top: 72px;
+    padding: 30px;
+}
+
+.Layout-content h3 {
+    font-size: 24px;
 }

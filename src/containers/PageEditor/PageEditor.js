@@ -4,6 +4,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import InputField from "../../components/UI/InputField/InputField";
 import TextArea from "../../components/UI/TextArea/TextArea";
 import Button from "../../components/UI/Button/Button";
+import './PageEditor.css';
 
 class PageEditor extends Component {
     state = {
@@ -14,19 +15,13 @@ class PageEditor extends Component {
         content: ""
     };
 
-    valueChanged = (event) => {
-        const name = event.target.name;
-        this.setState({[name]: event.target.value});
+    valueChanged = (e) => {
+        const name = e.target.name;
+        this.setState({[name]: e.target.value});
     };
 
-    _handleChange = (e) => {
-        let {name, value} = e.target;
-        this.setState({
-            [name]: value,
-        });
-    };
-
-    sectionUpdateHandler = (event) => {
+    sectionUpdateHandler = (e) => {
+        e.preventDefault();
         this.setState({loading: true});
         const update = {
             title: this.state.title,
@@ -35,11 +30,12 @@ class PageEditor extends Component {
 
         axios.put('/' + this.state.category + '.json', update)
             .then(response => {
-                if (response.statusText === "OK") {
-                    this.setState({loading: false});
-                    this.props.history.push('/pages/' + this.state.category);
-                }
-            })
+                this.setState({loading: false});
+                this.props.history.push('/pages/' + this.state.category);
+            }).catch(err => {
+            this.setState({loading: false});
+            throw new Error(err);
+        });
     };
 
     componentDidMount() {
@@ -53,7 +49,7 @@ class PageEditor extends Component {
             }).catch(err => {
             this.setState({loading: false});
             throw new Error(err);
-        })
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -72,8 +68,6 @@ class PageEditor extends Component {
     }
 
     render() {
-        const message = this.state.content;
-        const title = this.state.title;
         if (this.state.loading) {
             return <Spinner/>
         }
@@ -81,31 +75,28 @@ class PageEditor extends Component {
 
         if (this.state.category.localeCompare("Choose page to edit...") !== 0) {
             elements = (
-                <>
+                <form className="PageEditorForm" onSubmit={this.sectionUpdateHandler}>
                     <h4>Title</h4>
                     <InputField
                         name="title"
                         type="text"
-                        title={title}
+                        title={this.state.title}
                         change={this.valueChanged}
                     />
                     <h4>Content</h4>
                     <TextArea
                         name="content"
                         rows="10"
-                        cols="30"
-                        message={message}
+                        cols="80"
+                        message={this.state.content}
                         change={this.valueChanged}
                     />
                     <Button
                         btnType="add"
-                        click={this.sectionUpdateHandler}
                         value="Save"
                     />
-                </>
-            )
-            ;
-
+                </form>
+            );
         } else {
             elements = null;
         }
@@ -113,11 +104,11 @@ class PageEditor extends Component {
             <div className="PageEditor">
                 <h3>Edit pages</h3>
                 <div className="SelectBox">
-                    <label>Select page</label>
+                    <label>Selected page</label>
                     <select
                         name="category"
                         onChange={this.valueChanged}
-                        defaultValue="Choose page to edit..."
+                        defaultValue={this.state.sections[0]}
                     >
                         {this.state.sections.map(option => {
                             return <option value={option} key={option}> {option}</option>
@@ -125,7 +116,6 @@ class PageEditor extends Component {
                     </select>
                 </div>
                 {elements}
-
             </div>
         );
     }
